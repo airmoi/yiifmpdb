@@ -29,7 +29,7 @@ class CFmpCommand extends CDbCommand {
 			$this->_statement->bindValue($name,$value,$dataType);
 		$this->_paramLog[$name]=$value;*/
                 $p = strpos($query, '?');
-                        $query =  str_replace($name, $value == '' ? 'NULL' : "'$value'", $query);
+                        $query =  str_replace($name, $value == '' ? "''" : "'$value'", $query);
 			//$this->_paramLog[$name]=$value;
                 $this->reset();
                 $this->setText($query);

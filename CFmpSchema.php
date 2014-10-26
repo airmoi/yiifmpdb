@@ -122,14 +122,7 @@ class CFmpSchema extends CDbSchema
                     if ( $c->isForeignKey )
                         $foreignKeys[$name] = array(preg_replace('/(zkf|zkp)_([^_]*).*/', "$2", $name), 'zkp');
                 }
-		/*$sql="PRAGMA foreign_key_list({$table->rawName})";
-		$keys=$this->getDbConnection()->createCommand($sql)->queryAll();
-		foreach($keys as $key)
-		{
-			$column=$table->columns[$key['from']];
-			$column->isForeignKey=true;
-			$foreignKeys[$key['from']]=array($key['table'],$key['to']);
-		}*/
+		
 		$table->foreignKeys=$foreignKeys;
 	}
 

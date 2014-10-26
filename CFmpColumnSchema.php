@@ -24,8 +24,8 @@ class CFmpColumnSchema extends CDbColumnSchema
 	public function typecast($value)
 	{
 		
-		if( ( $value==='' || $value===null ) && $this->allowNull)
-			return 'NULL';
+		if( (  $value==='' || $value===null ) && $this->allowNull)
+			return '';
 		switch($this->dbType)
 		{
 			case 'varchar': return (string)"'$value'";
