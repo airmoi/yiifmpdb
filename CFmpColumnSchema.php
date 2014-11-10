@@ -2,17 +2,17 @@
 /**
  * CFmpColumnSchema class file.
  *
- * @author Romain Dunand <airmoi@gmail.com>
- * @link ---
- * @copyright 2013-2013 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @author Romain Dunand <romain_pro@dunand.me>
+ * @copyright 2014 YiiFmpDb
+ * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
  */
 
 /**
- * CFmpSchema is the class for retrieving metadata information from a FileMaker® ODBC database.
+ * CFmpColumnSchema class describes the column meta data of a database table.
  *
- * @author Romain Dunand <airmoi@gmail.com>
- * @package ext.fmpdb
+ * @author Romain Dunand <romain_pro@dunand.m>
+ * @package extensions.yiifmpdb
+ * @since 1.1.14
  */
 class CFmpColumnSchema extends CDbColumnSchema
 {

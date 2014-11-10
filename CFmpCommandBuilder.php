@@ -1,24 +1,21 @@
 <?php
 /**
- * CFmpColumnSchema class file.
+ * CFmpCommandBuilder class file.
  *
- * @author Romain Dunand <airmoi@gmail.com>
- * @link ---
- * @copyright 2013-2013 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @author Romain Dunand <romain_pro@dunand.me>
+ * @copyright 2014 YiiFmpDb
+ * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
  */
 
 /**
- * CFmpSchema is the class for retrieving metadata information from a FileMaker® ODBC database.
- *
- * @author Romain Dunand <airmoi@gmail.com>
- * @package extensions.fmpdb.CFmpSchema
- */
-
-/**
+ * CFmpCommandBuilder provides basic methods to create query commands for tables.
  * 
  * @property string $query
  * @property CDbTableSchema $table
+ * 
+ * @author Romain Dunand <romain_pro@dunand.m>
+ * @package extensions.yiifmpdb
+ * @since 1.1.14
  */
 class CFmpCommandBuilder extends CDbCommandBuilder
 {
@@ -89,6 +86,8 @@ class CFmpCommandBuilder extends CDbCommandBuilder
         
         /**
 	 * Returns the last insertion ID for the specified table.
+         * Warning, this may not be the real last inserted ID
+         * 
 	 * @param mixed $table the table schema ({@link CDbTableSchema}) or the table name (string).
 	 * @return mixed last insertion id. Null is returned if no sequence name.
 	 */
@@ -105,46 +104,6 @@ class CFmpCommandBuilder extends CDbCommandBuilder
 	}
         
         
-        
-        /**
-	 * Binds a value to a parameter.
-	 * @param mixed $name Parameter identifier. For a prepared statement
-	 * using named placeholders, this will be a parameter name of
-	 * the form :name. For a prepared statement using question mark
-	 * placeholders, this will be the 1-indexed position of the parameter.
-	 * @param mixed $value The value to bind to the parameter
-	 * @param integer $dataType SQL data type of the parameter. If null, the type is determined by the PHP type of the value.
-	 * @return CDbCommand the current command being executed
-	 * @see http://www.php.net/manual/en/function.PDOStatement-bindValue.php
-	 */
-	/*public function bindValue($name, $value, $dataType=null)
-	{
-            
-          
-            $type = $this->table->getColumn($name)->dbType;
-           Yii::trace("bindValue $name (".$dataType===null ? gettype($value):$dataType.") query : $this->query",'system.db.CFmpCommandBuilder');
-            //$this->query =  preg_replace('/'.$name.'/', $value , $this->query);
-            //return $this;
-            
-            if ( $type == 'date')
-                $this->query =  preg_replace('/'.$name.'/', "{d '".$value."'}" , $this->query);
-            elseif ( $type == 'time')
-                $this->query =  preg_replace('/'.$name.'/', "{t '".$value."'}" , $this->query);
-            elseif ( $type == 'timestamp')
-                $this->query =  preg_replace('/'.$name.'/', "{ts '".$value."'}" , $this->query);
-            elseif ( $type == 'decimal')
-                $this->query =  preg_replace('/'.$name.'/', $value , $this->query);
-            else
-                $this->query =  preg_replace('/'.$name.'/', "'$value'" , $this->query);
-		//$this->prepare();
-		/*if($dataType===null)
-			$this->_statement->bindValue($name,$value,$this->_connection->getPdoType(gettype($value)));
-		else
-			$this->_statement->bindValue($name,$value,$dataType);
-		$this->_paramLog[$name]=$value;*/
-		/*return $this;
-	}*/
-
 	/**
 	 * Binds a list of values to the corresponding parameters.
 	 * This is similar to {@link bindValue} except that it binds multiple values.
@@ -167,36 +126,6 @@ class CFmpCommandBuilder extends CDbCommandBuilder
 		
 	}
         
-        
-	/**
-	 * Binds parameter values for an SQL command.
-	 * @param CDbCommand $command database command
-	 * @param array $values values for binding (integer-indexed array for question mark placeholders, string-indexed array for named placeholders)
-	 */
-	/*public function bindValues($command, $values)
-	{
-            $this->query = $command->getText();
-		if(($n=count($values))===0)
-			return;
-		if(isset($values[0])) // question mark placeholders
-		{
-			for($i=0;$i<$n;++$i)
-				$this->bindValue($i+1,$values[$i]);
-		}
-		else // named placeholders
-		{
-			foreach($values as $name=>$value)
-			{
-				if($name[0]!==':')
-					$name=':'.$name;
-				$this->bindValue($name,$value);
-			}
-		}
-                $command->reset();
-                $command->setText($this->query);
-	}*/
-        
-    
     /**
 	 * Creates an UPDATE command.
 	 * @param mixed $table the table schema ({@link CDbTableSchema}) or the table name (string).
@@ -344,6 +273,7 @@ class CFmpCommandBuilder extends CDbCommandBuilder
                    $this->table = $this->getSchema()->getTable ($table);
                else
                    $this->table = $table;
+               
                 /* if table include containers trying to get them as binary (if query * )*/
                 if ($criteria->select === '*') {
                     $criteria->select = array();

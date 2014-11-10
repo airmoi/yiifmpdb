@@ -1,5 +1,8 @@
 <?php
-        
+
+/**
+ * @TODO improve error handling
+ */
 error_reporting(0);
 class pdoODBCEmulatore  {
     private $_db;

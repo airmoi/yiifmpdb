@@ -1,18 +1,19 @@
 <?php
 /**
- * CFmpColumnSchema class file.
+ * CFmpConnection class file.
  *
- * @author Romain Dunand <airmoi@gmail.com>
- * @link ---
- * @copyright 2013-2013 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @author Romain Dunand <romain_pro@dunand.me>
+ * @copyright 2014 YiiFmpDb
+ * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
  */
 
 /**
- * CFmpSchema is the class for retrieving metadata information from a FileMaker® ODBC database.
- *
- * @author Romain Dunand <airmoi@gmail.com>
- * @package extensions.fmpdb
+ * CFmpConnection represents a connection to a FileMaker database.
+ * As PDO ODBC is buggy with FileMaker ODBC Driver, we have to use a PDO Emulation classe (pdoODBCEmulator)
+ * 
+ * @author Romain Dunand <romain_pro@dunand.m>
+ * @package extensions.yiifmpdb
+ * @since 1.1.14
  */
 class CFmpConnection extends CDbConnection {
 
@@ -36,7 +37,7 @@ class CFmpConnection extends CDbConnection {
    }
    
     public $driverMap = array(
-        'odbc' => 'CFmpSchema', // FileMaker® ODBC driver
+        'odbc' => 'CFmpSchema', // FileMaker® ODBC driver, As PDO
     );
     
     public function getPdoType($type) {

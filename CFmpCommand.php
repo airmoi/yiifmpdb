@@ -1,9 +1,20 @@
 <?php
+/**
+ * CFmpCommand class file.
+ *
+ * @author Romain Dunand <romain_pro@dunand.me>
+ * @copyright 2014 YiiFmpDb
+ * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
+ */
 
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * CFmpCommand represents an SQL statement to execute against a database.
+ *
+ * Extends CDbCommand to emulate prepared statements (ODBC drivers doesn't support it)
+ * 
+ * @author Romain Dunand <romain_pro@dunand.m>
+ * @package extensions.yiifmpdb
+ * @since 1.1.14
  */
 class CFmpCommand extends CDbCommand {
     

@@ -2,10 +2,9 @@
 /**
  * CFmpSchema class file.
  *
- * @author Romain Dunand <airmoi@gmail.com>
- * @link ---
- * @copyright 2013-2013 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @author Romain Dunand <romain_pro@dunand.me>
+ * @copyright 2014 YiiFmpDb
+ * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
  */
 
 /**
@@ -16,6 +15,8 @@
  */
 class CFmpSchema extends CDbSchema
 {
+    public $foreignKeyPattern = '/(zkf|zkp)_([^_]*).*/';
+    public $primaryKeyPattern = '/(zkp)_?.*/';
 	/**
 	 * @var array the abstract column types mapped to physical column types.
 	 */
@@ -153,7 +154,7 @@ class CFmpSchema extends CDbSchema
 	 */
 	public function renameTable($table, $newName)
 	{
-		throw new CDbException(Yii::t('yii', 'ALTER table is not supported by FileMaker ODBC driver.'));
+		throw new CDbException(Yii::t('yii', 'ALTER table is not implemented yet. Feel free to add this function'));
 	}
 
 	/**
@@ -177,7 +178,7 @@ class CFmpSchema extends CDbSchema
 	 */
 	public function dropColumn($table, $column)
 	{
-		throw new CDbException(Yii::t('yii', 'Dropping DB column is not supported by FileMaker ODBC driver.'));
+		throw new CDbException(Yii::t('yii', 'Dropping DB column is not implemented yet. Feel free to add this function'));
 	}
 
 	/**
@@ -191,7 +192,7 @@ class CFmpSchema extends CDbSchema
 	 */
 	public function renameColumn($table, $name, $newName)
 	{
-		throw new CDbException(Yii::t('yii', 'Renaming a DB column is not supported by FileMaker ODBC driver.'));
+		throw new CDbException(Yii::t('yii', 'Renaming a DB column is not implemented yet. Feel free to add this function'));
 	}
 
 	/**
@@ -238,7 +239,7 @@ class CFmpSchema extends CDbSchema
 	 */
 	public function alterColumn($table, $column, $type)
 	{
-		throw new CDbException(Yii::t('yii', 'Altering a DB column is not supported by FileMaker ODBC driver.'));
+		throw new CDbException(Yii::t('yii', 'Altering a DB column is not implemented yet. Feel free to add this function'));
 	}
 
 	/**
@@ -251,7 +252,7 @@ class CFmpSchema extends CDbSchema
 	 */
 	public function dropIndex($name, $table)
 	{
-		throw new CDbException(Yii::t('yii', 'Dropping an index is not supported by FileMaker ODBC driver.'));
+		throw new CDbException(Yii::t('yii', 'Dropping an index is not implemented yet. Feel free to add this function'));
 	}
 
 	/**
@@ -265,7 +266,7 @@ class CFmpSchema extends CDbSchema
 	 */
 	public function addPrimaryKey($name,$table,$columns)
 	{
-		throw new CDbException(Yii::t('yii', 'Adding a primary key after table has been created is not supported by FileMaker ODBC driver.'));
+		throw new CDbException(Yii::t('yii', 'Adding a primary key is not supported by FileMaker ODBC driver.'));
 	}
 
 
@@ -279,7 +280,7 @@ class CFmpSchema extends CDbSchema
 	 */
 	public function dropPrimaryKey($name,$table)
 	{
-		throw new CDbException(Yii::t('yii', 'Removing a primary key after table has been created is not supported by FileMaker ODBC driver.'));
+		throw new CDbException(Yii::t('yii', 'Removing a primary key is not supported by FileMaker ODBC driver.'));
 
 	}
 

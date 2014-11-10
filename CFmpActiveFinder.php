@@ -2,10 +2,9 @@
 /**
  * CFmpActiveFinder class file.
  *
- * @author Qiang Xue <qiang.xue@gmail.com>
- * @link http://www.yiiframework.com/
- * @copyright 2008-2013 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @author Romain Dunand <romain_pro@dunand.me>
+ * @copyright 2014 YiiFmpDb
+ * @license http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
  */
 
 /**
@@ -13,10 +12,13 @@
  *
  * When used in eager loading, this class provides the same set of find methods as
  * {@link CActiveRecord}.
+ * 
+ * Overwrite default CActiveFinder
  *
- * @author Qiang Xue <qiang.xue@gmail.com>
- * @package system.db.ar
- * @since 1.0
+ *
+ * @author Romain Dunand <romain_pro@dunand.m>
+ * @package extensions.yiifmpdb
+ * @since 1.1.14
  */
 class CFmpActiveFinder extends CComponent
 {
