@@ -3,10 +3,10 @@
 /**
  * @TODO improve error handling
  */
-error_reporting(0);
+//error_reporting(0);
 class pdoODBCEmulatore  {
     private $_db;
-    
+    private $_query;
     /**
      * 
      */
@@ -16,9 +16,10 @@ class pdoODBCEmulatore  {
         if(($pos=strpos($dsn, ':'))!==false)
 			$dsn =  strtolower(substr($dsn, $pos+1, strlen($dsn)-$pos));
         
-        if ( !$this->_db = odbc_connect($dsn, $username, $password, SQL_CUR_USE_ODBC))
+        if ( !$this->_db = odbc_connect($dsn, $username, $password))
             $this->throwErrors();
-        odbc_longreadlen($this->_db, 1024*1024*30);
+        
+        odbc_longreadlen($this->_db, 1000000) ;//1024*1024*30);
     }
     
     /**
@@ -97,15 +98,16 @@ class pdoODBCEmulatore  {
      * @return pdoODBCStatement
      */
     public function prepare (  $statement , $driver_options = array() ) {
+        $this->_query = $statement;
         if (!$stmt = odbc_prepare($this->_db, $statement))
             $this->throwErrors();
-       return new pdoODBCStatement($stmt, $this->_db); 
+       return new pdoODBCStatement($stmt, $this->_db, $statement); 
     }
     
     public function  query (  $statement ) {
         if (!$stmt = odbc_exec($this->_db, $statement))
              $this->throwErrors();
-       return new pdoODBCStatement($stmt, $this->_db); 
+       return new pdoODBCStatement($stmt, $this->_db, $statement); 
     }
     
     /**
@@ -135,15 +137,17 @@ class pdoODBCStatement extends PDOStatement {
     private $_statement;
     private $_db;
     private $_fetchMode = PDO::FETCH_ASSOC;
+    private $_query;
     /* Méthodes */
 
     /**
      * 
      * @param ressource $Result_id result of odbc_prepare();
      */
-    public function __construct($Result_id, $db) {
+    public function __construct($Result_id, $db, $query=null) {
         $this->_statement = $Result_id;
         $this->_db = $db;
+        $this->_query = $query;
     }
     /**
      * NOT SUPPORTED
@@ -226,6 +230,8 @@ class pdoODBCStatement extends PDOStatement {
         
         if (!odbc_execute($this->_statement, $input_parameters))
             $this->throwErrors();
+        
+        odbc_longreadlen($this->_statement, 1000000);
         return true;
         
     }
@@ -239,9 +245,14 @@ class pdoODBCStatement extends PDOStatement {
         if ($cursor_offset == 0 ) {
             $cursor_offset = null;
         }
-        
+        $numrows = $this->rowCount();
         if ( $fetch_style == PDO::FETCH_ASSOC){
-            return odbc_fetch_array ($this->_statement, $cursor_offset );
+            $row = odbc_fetch_array ($this->_statement );  
+            return $row;
+        }
+        elseif ( $fetch_style == PDO::FETCH_COLUMN) {    
+            $row = odbc_fetch_array ($this->_statement, $cursor_offset );
+            return $row[key($row)];
         }
         elseif ( $fetch_style == PDO::FETCH_BOTH or $fetch_style == PDO::FETCH_NUM){
             /*Bug avec driver FMP sur fetch row => emulation */
@@ -309,6 +320,7 @@ class pdoODBCStatement extends PDOStatement {
         $this->_fetchArgs = $fetch_argument;
         $this->_ctor_args = $ctor_args;
         
+        //reset cursor
         $result = array();
         while ( $row = $this->fetch($fetch_style) ) {
             $result[] = $row; 
@@ -354,8 +366,8 @@ class pdoODBCStatement extends PDOStatement {
      * @return int
      */
     public function  rowCount (  ){
-        if (!$result = odbc_num_rows($this->_statement))
-            $this->throwErrors();
+        $result = odbc_num_rows($this->_statement);
+            //$this->throwErrors();
         return $result;
     }
     public function  setAttribute (  $attribute ,  $value ){
@@ -380,7 +392,7 @@ class pdoODBCStatement extends PDOStatement {
 class pdoODBCException extends Exception { 
 
     public function __construct( $message, $code = null) { 
-        echo $message,$code;
+        //echo $message,$code;
         if(strstr($message, 'SQLSTATE[')) { 
             preg_match('/SQLSTATE\[(\w+)\] \[(\w+)\] (.*)/', $message, $matches); 
             $this->code = ($matches[1] == 'HT000' ? $matches[2] : $matches[1]); 
@@ -388,7 +400,7 @@ class pdoODBCException extends Exception {
         } 
         else {
             
-            //$this->code = $code; 
+            $this->code = $code; 
             $this->message = $message; 
         }
     } 

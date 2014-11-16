@@ -47,6 +47,24 @@ class CFmpConnection extends CDbConnection {
             return parent::getPdoType($type);
         }
     }
+    
+    /**
+	 * Returns the information of DBMS server.
+	 * @return string the information of DBMS server
+	 */
+	public function getServerInfo()
+	{
+		return 'type: FileMaker ODBC connection';
+	}
+
+	/**
+	 * Returns the version information of DBMS server.
+	 * @return string the version information of DBMS server
+	 */
+	public function getServerVersion()
+	{
+		return "1";
+	}
 
 }
 

@@ -16,6 +16,7 @@
  */
 class CFmpColumnSchema extends CDbColumnSchema
 {
+        public $isCalculated;
 	/**
 	 * Converts the input value to the type that this column is of.
 	 * @param mixed $value input value
@@ -25,7 +26,7 @@ class CFmpColumnSchema extends CDbColumnSchema
 	{
 		
 		if( (  $value==='' || $value===null ) && $this->allowNull)
-			return '';
+			return "''";
 		switch($this->dbType)
 		{
 			case 'varchar': return (string)"'$value'";

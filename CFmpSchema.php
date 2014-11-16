@@ -64,8 +64,18 @@ class CFmpSchema extends CDbSchema
 	protected function loadTable($name)
 	{
 		$table=new CDbTableSchema;
-		$table->name=$name;
-		$table->rawName=$this->quoteTableName($name);
+                
+                /*
+                 * get first available TO name
+                 */
+                $query="SELECT TableName FROM FileMaker_Tables WHERE BaseTableName='$name' or TableName='$name'";
+                $tablename = $this->getDbConnection()->createCommand($query)->queryColumn();
+		
+                if ( sizeof ( $tablename) == 0)
+                    return null; //Table sans occurrence
+                
+                $table->name=$tablename[0];
+		$table->rawName=$this->quoteTableName($tablename[0]);
 
 		if($this->findColumns($table))
 		{
@@ -83,7 +93,17 @@ class CFmpSchema extends CDbSchema
 	 */
 	protected function findColumns($table)
 	{
-		$sql="SELECT * FROM FileMaker_Fields WHERE TableName = '".$table->name."'";
+                /*
+                 * Ignore Global and summary fields
+                 */
+		$sql="SELECT * FROM FileMaker_Fields WHERE TableName = '".$table->name."' "
+                        . "AND FieldType NOT LIKE 'global%' "
+                        . "AND FieldClass NOT LIKE 'Summary' " 
+                        . "AND FieldName NOT LIKE 'zkk_%' "
+                        . "AND FieldName NOT LIKE 'zgi_%' "
+                        . "AND FieldName NOT LIKE 'zzz_%' "
+                        . "AND FieldName NOT LIKE 'z_foundCount_cU' "
+                        . "AND FieldName NOT LIKE 'z_listOf_eval_cU'";
 		$columns=$this->getDbConnection()->createCommand($sql)->queryAll();
 		if(empty($columns))
 			return false;
@@ -137,6 +157,7 @@ class CFmpSchema extends CDbSchema
 		$c=new CFmpColumnSchema;
 		$c->name=$column['FieldName'];
 		$c->rawName=$this->quoteColumnName($c->name);
+                $c->isCalculated = $column['FieldClass'] == 'Calculated' ;
 		$c->allowNull=true;
 		$c->isPrimaryKey=substr($c->name, 0, 3)=="zkp"; //Primary key name must start with "zkp"
 		$c->isForeignKey=substr($c->name, 0, 3)=="zkf" || substr($c->name, 0, 4)=="zkp_"; //Foreign keys must respect this pattern (zkf|zkp)_<?tablename:[^_]>.*

@@ -96,8 +96,8 @@ class CFmpCommandBuilder extends CDbCommandBuilder
 		$this->ensureTable($table);
 		if($table->sequenceName!==null) {
 			$q = $this->getDbConnection()->getPdoInstance()->query("SELECT MAX(zkp) FROM {$table->rawName}");
-                        $id = $q->fetch();
-                        return $id[0];
+                        $id = $q->fetch(PDO::FETCH_COLUMN);
+                        return @$id;
                 }
 		else
 			return null;
@@ -148,7 +148,9 @@ class CFmpCommandBuilder extends CDbCommandBuilder
 		$i=0;
 		foreach($data as $name=>$value)
 		{
-			if(($column=$table->getColumn($name))!==null)
+			if(($column=$table->getColumn($name))!==null 
+                                && $value != null
+                                && !$column->isCalculated )
 			{
 				if($value instanceof CDbExpression)
 				{
@@ -327,7 +329,10 @@ class CFmpCommandBuilder extends CDbCommandBuilder
 		$i=0;
 		foreach($data as $name=>$value)
 		{
-			if(($column=$table->getColumn($name))!==null && ($value!==null || $column->allowNull))
+			if(($column=$table->getColumn($name))!==null 
+                                && !$column->isCalculated 
+                                && $value != null
+                                && ($value!==null || $column->allowNull))
 			{
 				$fields[]=$column->rawName;
 				if($value instanceof CDbExpression)
